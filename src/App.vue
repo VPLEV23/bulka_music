@@ -1,8 +1,13 @@
 <template>
+  <NavBar />
   <div class="content">
     <router-view />
   </div>
 </template>
+
+<script setup>
+import NavBar from "./composables/NavBar.vue";
+</script>
 
 <style>
 .content {
