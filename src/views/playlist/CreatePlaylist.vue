@@ -9,8 +9,8 @@
     ></textarea>
     <!-- uploadplaylist image -->
     <label>Upload playlist cover image</label>
-    <input type="file" />
-    <div class="error"></div>
+    <input type="file" @change="handleChange" />
+    <div class="error">{{ fileError }}</div>
     <button>Create</button>
   </form>
 </template>
@@ -20,9 +20,26 @@ import { ref } from "vue";
 
 const title = ref("");
 const desc = ref("");
+const file = ref(null);
+const fileError = ref(null);
 
 const createPlaylist = () => {
-  console.log(title.value, desc.value);
+  if (file.value) {
+    console.log(title.value, desc.value);
+  }
+};
+
+const types = ["image/png", "image/jpeg"];
+const handleChange = (e) => {
+  let selected = e.target.files[0];
+  console.log(selected);
+  if (selected && types.includes(selected.type)) {
+    file.value = selected;
+    fileError.value = null;
+  } else {
+    file.value = null;
+    fileError.value = "Please select an image file (png or jpg)";
+  }
 };
 </script>
 
