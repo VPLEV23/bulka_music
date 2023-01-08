@@ -11,25 +11,46 @@
     <label>Upload playlist cover image</label>
     <input type="file" @change="handleChange" />
     <div class="error">{{ fileError }}</div>
-    <button>Create</button>
+    <button v-if="!isPending">Create</button>
+    <button v-else disabled>Saving...</button>
   </form>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import useStorage from "@/composables/useStorage";
+import useCollection from "@/composables/useCollection";
+import getUser from "@/composables/getUser";
+import { timestamp } from "@/firebase/config";
 
 const { filePath, url, uploadImage } = useStorage();
+const { error, addDoc } = useCollection("playlists");
+const { user } = getUser();
 
 const title = ref("");
 const desc = ref("");
 const file = ref(null);
 const fileError = ref(null);
+const isPending = ref(false);
 
 const createPlaylist = async () => {
   if (file.value) {
+    isPending.value = true;
     await uploadImage(file.value);
-    console.log("Image Uploaded", url.value);
+    await addDoc({
+      title: title.value,
+      description: desc.value,
+      userId: user.value.uid,
+      userName: user.value.displayName,
+      coverUrl: url.value,
+      filePath: filePath.value, // so we can delete it later
+      songs: [],
+      createdAt: timestamp(),
+    });
+    isPending.value = false;
+    if (!error.value) {
+      console.log("playlist added");
+    }
   }
 };
 
