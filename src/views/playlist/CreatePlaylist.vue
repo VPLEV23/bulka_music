@@ -17,15 +17,19 @@
 
 <script setup>
 import { ref } from "vue";
+import useStorage from "@/composables/useStorage";
+
+const { filePath, url, uploadImage } = useStorage();
 
 const title = ref("");
 const desc = ref("");
 const file = ref(null);
 const fileError = ref(null);
 
-const createPlaylist = () => {
+const createPlaylist = async () => {
   if (file.value) {
-    console.log(title.value, desc.value);
+    await uploadImage(file.value);
+    console.log("Image Uploaded", url.value);
   }
 };
 
