@@ -1,4 +1,5 @@
 # bulka_music
+Create your playlists and share it whit yout friends
 
 ## Project setup
 ```
